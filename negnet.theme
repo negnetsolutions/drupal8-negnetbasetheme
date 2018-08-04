@@ -1,0 +1,59 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+
+function negnet_preprocess_html(&$variables) {
+  // If on a node add or edit page, add a node-layout class.
+  $path_args = explode('/', \Drupal::request()->getPathInfo());
+  if ($suggestions = theme_get_suggestions($path_args, 'page', '-')) {
+    foreach ($suggestions as $suggestion) {
+      if ($suggestion === 'page-node-edit' || strpos($suggestion, 'page-node-add') !== FALSE) {
+        $variables['attributes']['class'][] = 'node-form-layout';
+      }
+    }
+  }
+}
+
+function negnet_preprocess_page(&$variables) {
+
+  if (!\Drupal::currentUser()->isAnonymous()) {
+    $variables['#attached']['library'][] = 'negnet/admin';
+  }
+
+}
+
+function negnet_page_attachments_alter(array &$page) {
+  $unset_meta = [
+    'system_meta_generator', // Meta name "Generator"
+  ];
+  foreach ($page['#attached']['html_head'] as $key => $value) {
+    if (in_array($value[1], $unset_meta)) unset($page['#attached']['html_head'][$key]);
+  }
+}
+
+function negnet_js_alter(&$javascript, \Drupal\Core\Asset\AttachedAssetsInterface $assets) {
+  foreach($javascript as $key=>&$value) {
+    //add attributes to keep cloudflare from modifying javascript
+    $value['attributes']['data-cfasync'] = "false";
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\node\NodeForm.
+ *
+ * Changes vertical tabs to container.
+ */
+function negnet_form_node_form_alter(&$form, FormStateInterface $form_state) {
+  $form['#theme'] = ['node_edit_form'];
+  $form['#attached']['library'][] = 'seven/global-styling';
+  $form['#attached']['library'][] = 'negnet/node-form';
+
+  $form['advanced']['#type'] = 'container';
+  $form['meta']['#type'] = 'container';
+  $form['meta']['#access'] = TRUE;
+  $form['meta']['changed']['#wrapper_attributes']['class'][] = 'container-inline';
+  $form['meta']['author']['#wrapper_attributes']['class'][] = 'container-inline';
+
+  $form['revision_information']['#type'] = 'container';
+  $form['revision_information']['#group'] = 'meta';
+}

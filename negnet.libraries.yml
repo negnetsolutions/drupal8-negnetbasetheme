@@ -1,0 +1,10 @@
+admin:
+  version: 0.01
+  css:
+    theme:
+      css/admin.css: {}
+node-form:
+  version: 0.01
+  css:
+    theme:
+      css/node-form.css: {}

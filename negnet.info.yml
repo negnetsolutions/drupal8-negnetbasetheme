@@ -3,7 +3,7 @@ type: theme
 description: 'A base theme for Negnet Solution Themes'
 core: 8.x
 libraries:
-#  - seven/global-styling
+ - negnet/main
 regions:
   header: Header
   content: Content

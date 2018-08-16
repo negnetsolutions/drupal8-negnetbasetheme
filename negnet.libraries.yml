@@ -1,3 +1,6 @@
+main:
+  js:
+    js/external.js: {}
 admin:
   version: 0.01
   css:

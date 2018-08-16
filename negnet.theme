@@ -16,7 +16,7 @@ function negnet_preprocess_html(&$variables)
 
     $node = \Drupal::routeMatch()->getParameter('node');
     if($node) {
-      $variables['attributes']['class'][] = 'node-' . $node->id();
+        $variables['attributes']['class'][] = 'node-' . $node->id();
     }
 }
 
@@ -35,7 +35,20 @@ function negnet_page_attachments_alter(array &$page)
     'system_meta_generator', // Meta name "Generator"
     ];
     foreach ($page['#attached']['html_head'] as $key => $value) {
-        if (in_array($value[1], $unset_meta)) { unset($page['#attached']['html_head'][$key]);
+        if (in_array($value[1], $unset_meta)) { 
+            unset($page['#attached']['html_head'][$key]);
+        }
+    }
+
+    //do links
+    $unset_meta = [
+    'shortcut icon', // favicon
+    ];
+    foreach ($page['#attached']['html_head_link'] as $key => $value) {
+        foreach ($value as $kk => $v) {
+            if (in_array($v['rel'], $unset_meta)) {
+                unset($page['#attached']['html_head_link'][$key][$kk]);
+            }
         }
     }
 }

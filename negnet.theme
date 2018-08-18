@@ -31,6 +31,8 @@ function negnet_preprocess_page(&$variables)
 
 function negnet_page_attachments_alter(array &$page) 
 {
+    $current_path = \Drupal::service('path.current')->getPath();
+
     $unset_meta = [
     'system_meta_generator', // Meta name "Generator"
     ];
@@ -50,6 +52,14 @@ function negnet_page_attachments_alter(array &$page)
                 unset($page['#attached']['html_head_link'][$key][$kk]);
             }
         }
+    }
+
+    switch($current_path) {
+    case '/user/login':
+    case '/user/password':
+    case '/user/register':
+        $page['#attached']['library'][] = 'negnet/admin';
+        break;
     }
 }
 

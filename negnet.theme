@@ -22,7 +22,6 @@ function negnet_preprocess_html(&$variables)
 
 function negnet_preprocess_page(&$variables) 
 {
-
     if (!\Drupal::currentUser()->isAnonymous()) {
         $variables['#attached']['library'][] = 'negnet/admin';
     }
@@ -46,11 +45,15 @@ function negnet_page_attachments_alter(array &$page)
     $unset_meta = [
     'shortcut icon', // favicon
     ];
-    foreach ($page['#attached']['html_head_link'] as $key => $value) {
+    foreach ($page['#attached']['html_head_link'] as $key => &$value) {
         foreach ($value as $kk => $v) {
             if (in_array($v['rel'], $unset_meta)) {
                 unset($page['#attached']['html_head_link'][$key][$kk]);
             }
+        }
+
+        if (count($value) == 0) {
+            unset($page['#attached']['html_head_link'][$key]);
         }
     }
 
@@ -79,7 +82,6 @@ function negnet_js_alter(&$javascript, \Drupal\Core\Asset\AttachedAssetsInterfac
 function negnet_form_node_form_alter(&$form, FormStateInterface $form_state) 
 {
     $form['#theme'] = ['node_edit_form'];
-    // $form['#attached']['library'][] = 'seven/global-styling';
     $form['#attached']['library'][] = 'negnet/node-form';
 
     $form['advanced']['#type'] = 'container';
@@ -90,4 +92,28 @@ function negnet_form_node_form_alter(&$form, FormStateInterface $form_state)
 
     $form['revision_information']['#type'] = 'container';
     $form['revision_information']['#group'] = 'meta';
+}
+
+function negnet_preprocess_menu(&$variables, $hook) 
+{
+    if ($hook == 'menu') {
+        $current_path = \Drupal::request()->getRequestUri();
+        $items = $variables['items'];
+
+        foreach ($items as $key => $item) {
+            // Set active to dom element if path of menu item matches current path
+            if ($item['url']->toString() == $current_path) {
+                // Add active link.
+                // $variables['items'][$key]['attributes']['class'][] = 'active';
+                $variables['items'][$key]['attributes']->addClass('active');
+            } else {
+                // Set active to dom element if path of menu item matches first part of current path
+                $url_fragments = explode('/', $current_path);
+                if (count($url_fragments) > 1 AND '/' . $url_fragments[1] == $item['url']->toString()) {
+                    // $variables['items'][$key]['attributes']['class'][] = 'active';
+                    $variables['items'][$key]['attributes']->addClass('active');
+                }
+            }
+        }
+    }
 }

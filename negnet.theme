@@ -34,6 +34,7 @@ function negnet_preprocess_node(&$variables)
 
     if (!$node->isPublished() ) {
         $variables['attributes']['class'][] = 'unpublished';
+        $variables['unpublished'] = true;
     }
 }
 

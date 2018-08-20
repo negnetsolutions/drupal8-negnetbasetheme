@@ -140,6 +140,14 @@ dl {
   background-color: #ffc0cb66;
 }
 
+.messages {
+  padding: 1em;
+  text-align: center;
+  &.notice {
+    background: darkgrey;
+  }
+}
+
 @import "buttons";
 @import "dropbutton";
 @import "tables";

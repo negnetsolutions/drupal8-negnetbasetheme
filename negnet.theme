@@ -28,7 +28,16 @@ function negnet_preprocess_page(&$variables)
 
 }
 
-function negnet_page_attachments_alter(array &$page) 
+function negnet_preprocess_node(&$variables)
+{
+    $node = $variables['node'];
+
+    if (!$node->isPublished() ) {
+        $variables['attributes']['class'][] = 'unpublished';
+    }
+}
+
+function negnet_page_attachments_alter(array &$page)
 {
     $current_path = \Drupal::service('path.current')->getPath();
 

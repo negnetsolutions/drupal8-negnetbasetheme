@@ -1,20 +1,8 @@
-(function ($) {
-  function setup_external_link_handler() {
-    // Creating custom :external selector
-    jQuery.expr[':'].external = function(obj){
-      if( !obj.href.match(/^mailto\:/) && (obj.hostname != location.hostname) ) {
-        return true;
-      }
-      return false;
-    };
+var links = document.links;
 
-    //set all external link targets to _blank
-    jQuery('a:external').attr('target','_blank');
-    jQuery('a:external').attr('rel','noopener');
+for (var i = 0, linksLength = links.length; i < linksLength; i++) {
+  if (links[i].hostname != window.location.hostname) {
+    links[i].target = '_blank';
+    links[i].rel = 'noopener';
   }
-
-  $(document).ready(function(){
-    setup_external_link_handler();
-  });
-
-}(jQuery));
+}

@@ -1,6 +1,9 @@
 main:
   js:
     js/external.js: {}
+  css:
+    theme:
+      css/main.css: {}
 admin:
   version: 0.01
   css:

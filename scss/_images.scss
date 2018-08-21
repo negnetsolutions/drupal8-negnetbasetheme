@@ -1,0 +1,21 @@
+img, .rs_image, .responsive-image {
+  max-width: 100%;
+}
+
+div, img, .rs_image, .responsive-image {
+  &.half {
+    &, img {
+      width: 50%;
+    }
+  }
+  &.twentyfive {
+    &, img {
+      width: 25%;
+    }
+  }
+  &.seventyfive {
+    &, img {
+      width: 75%;
+    }
+  }
+}

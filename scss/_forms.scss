@@ -56,7 +56,10 @@ summary {
   .entity-meta__header, details {
     padding: 1em;
     border: 1px solid black;
-    border-width: 1px 0;
+    border-width: 0 0 1px 0;
+    &:first-child {
+      border-width: 1px 0;
+    }
     &[open] {
       background: white;
       & > summary {

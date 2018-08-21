@@ -98,7 +98,7 @@
 .js .dropbutton-widget .dropbutton-action input,
 .js .dropbutton-widget .dropbutton-action button {
   border-radius: 20em 0 0 20em; /* LTR */
-  padding: 4px 1.5em;
+  padding: .45em 1.5em;
   display: block;
   width: 100%;
 }
@@ -246,9 +246,6 @@
 }
 .js .dropbutton-wrapper .dropbutton-widget .dropbutton-toggle button:hover,
 .js .dropbutton-wrapper .dropbutton-widget .dropbutton-toggle button:focus {
-  background-color: #f9f8f6;
-  background-image: -webkit-linear-gradient(top, #fcfcfa, #e9e9dd);
-  background-image: linear-gradient(to bottom, #fcfcfa, #e9e9dd);
   color: #1a1a1a;
   text-decoration: none;
   box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.125);

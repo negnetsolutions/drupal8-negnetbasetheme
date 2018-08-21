@@ -1,11 +1,12 @@
 main:
+  version: 0.01
   js:
     js/external.js: {}
   css:
     theme:
       css/main.css: {}
 admin:
-  version: 0.01
+  version: 0.02
   css:
     theme:
       css/admin.css: {}

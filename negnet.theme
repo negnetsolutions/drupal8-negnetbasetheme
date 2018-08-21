@@ -114,16 +114,23 @@ function negnet_preprocess_menu(&$variables, $hook)
             // Set active to dom element if path of menu item matches current path
             if ($item['url']->toString() == $current_path) {
                 // Add active link.
-                // $variables['items'][$key]['attributes']['class'][] = 'active';
                 $variables['items'][$key]['attributes']->addClass('active');
             } else {
                 // Set active to dom element if path of menu item matches first part of current path
                 $url_fragments = explode('/', $current_path);
                 if (count($url_fragments) > 1 AND '/' . $url_fragments[1] == $item['url']->toString()) {
-                    // $variables['items'][$key]['attributes']['class'][] = 'active';
                     $variables['items'][$key]['attributes']->addClass('active');
                 }
             }
+        }
+    }
+}
+
+function negnet_preprocess_menu_local_tasks(&$variables) 
+{
+    foreach ($variables['primary'] as $key => $link) {
+        if ($link['#active'] == true) {
+            unset($variables['primary'][$key]);
         }
     }
 }

@@ -4,6 +4,8 @@ description: 'A base theme for Negnet Solution Themes'
 core: 8.x
 libraries:
  - negnet/main
+ckeditor_stylesheets:
+  - css/main.css
 regions:
   header: Header
   content: Content

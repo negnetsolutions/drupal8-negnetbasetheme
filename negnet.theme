@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 function negnet_preprocess_html(&$variables) 
 {
@@ -36,6 +37,13 @@ function negnet_preprocess_node(&$variables)
         $variables['attributes']['class'][] = 'unpublished';
         $variables['unpublished'] = true;
     }
+
+    if ($node->access('edit')) {
+        $variables['user_can_edit'] = true;
+    }
+
+    $current_url = Url::fromRoute('<current>');
+    $variables['current_path'] = $current_url->toString();
 }
 
 function negnet_page_attachments_alter(array &$page)

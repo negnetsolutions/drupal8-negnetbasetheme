@@ -6,7 +6,7 @@ main:
     theme:
       css/main.css: {}
 admin:
-  version: 0.02
+  version: 0.03
   css:
     theme:
       css/admin.css: {}

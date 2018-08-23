@@ -38,7 +38,7 @@ function negnet_preprocess_node(&$variables)
         $variables['unpublished'] = true;
     }
 
-    if ($node->access('edit')) {
+    if ($node->access('update')) {
         $variables['user_can_edit'] = true;
     }
 

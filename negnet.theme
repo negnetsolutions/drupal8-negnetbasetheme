@@ -1,95 +1,113 @@
 <?php
 
+/**
+ * @file
+ * Negnet Solutions Base Theme.
+ */
+
+use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
-function negnet_preprocess_html(&$variables) 
-{
-    // If on a node add or edit page, add a node-layout class.
-    $path_args = explode('/', \Drupal::request()->getPathInfo());
-    if ($suggestions = theme_get_suggestions($path_args, 'page', '-')) {
-        foreach ($suggestions as $suggestion) {
-            if ($suggestion === 'page-node-edit' || strpos($suggestion, 'page-node-add') !== false) {
-                $variables['attributes']['class'][] = 'node-form-layout';
-            }
-        }
+/**
+ * Implements hook_preprocess_html().
+ */
+function negnet_preprocess_html(&$variables) {
+  // If on a node add or edit page, add a node-layout class.
+  $path_args = explode('/', \Drupal::request()->getPathInfo());
+  if ($suggestions = theme_get_suggestions($path_args, 'page', '-')) {
+    foreach ($suggestions as $suggestion) {
+      if ($suggestion === 'page-node-edit' || strpos($suggestion, 'page-node-add') !== FALSE) {
+        $variables['attributes']['class'][] = 'node-form-layout';
+      }
     }
+  }
 
-    $node = \Drupal::routeMatch()->getParameter('node');
-    if($node) {
-        $variables['attributes']['class'][] = 'node-' . $node->id();
-    }
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if ($node) {
+    $variables['attributes']['class'][] = 'node-' . $node->id();
+  }
 }
 
-function negnet_preprocess_page(&$variables) 
-{
-    if (!\Drupal::currentUser()->isAnonymous()) {
-        $variables['#attached']['library'][] = 'negnet/admin';
-    }
+/**
+ * Implements hook_preprocess_page().
+ */
+function negnet_preprocess_page(&$variables) {
+  if (!\Drupal::currentUser()->isAnonymous()) {
+    $variables['#attached']['library'][] = 'negnet/admin';
+  }
 
 }
 
-function negnet_preprocess_node(&$variables)
-{
-    $node = $variables['node'];
+/**
+ * Implements hook_preprocess_node().
+ */
+function negnet_preprocess_node(&$variables) {
+  $node = $variables['node'];
 
-    if (!$node->isPublished() ) {
-        $variables['attributes']['class'][] = 'unpublished';
-        $variables['unpublished'] = true;
-    }
+  if (!$node->isPublished()) {
+    $variables['attributes']['class'][] = 'unpublished';
+    $variables['unpublished'] = TRUE;
+  }
 
-    if ($node->access('update')) {
-        $variables['user_can_edit'] = true;
-    }
+  if ($node->access('update')) {
+    $variables['user_can_edit'] = TRUE;
+  }
 
-    $current_url = Url::fromRoute('<current>');
-    $variables['current_path'] = $current_url->toString();
+  $current_url = Url::fromRoute('<current>');
+  $variables['current_path'] = $current_url->toString();
 }
 
-function negnet_page_attachments_alter(array &$page)
-{
-    $current_path = \Drupal::service('path.current')->getPath();
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function negnet_page_attachments_alter(array &$page) {
+  $current_path = \Drupal::service('path.current')->getPath();
 
-    $unset_meta = [
-    'system_meta_generator', // Meta name "Generator"
-    ];
-    foreach ($page['#attached']['html_head'] as $key => $value) {
-        if (in_array($value[1], $unset_meta)) { 
-            unset($page['#attached']['html_head'][$key]);
-        }
+  $unset_meta = [
+  // Meta name "Generator".
+    'system_meta_generator',
+  ];
+  foreach ($page['#attached']['html_head'] as $key => $value) {
+    if (in_array($value[1], $unset_meta)) {
+      unset($page['#attached']['html_head'][$key]);
+    }
+  }
+
+  // Do links.
+  $unset_meta = [
+  // Favicon.
+    'shortcut icon',
+  ];
+  foreach ($page['#attached']['html_head_link'] as $key => &$value) {
+    foreach ($value as $kk => $v) {
+      if (in_array($v['rel'], $unset_meta)) {
+        unset($page['#attached']['html_head_link'][$key][$kk]);
+      }
     }
 
-    //do links
-    $unset_meta = [
-    'shortcut icon', // favicon
-    ];
-    foreach ($page['#attached']['html_head_link'] as $key => &$value) {
-        foreach ($value as $kk => $v) {
-            if (in_array($v['rel'], $unset_meta)) {
-                unset($page['#attached']['html_head_link'][$key][$kk]);
-            }
-        }
-
-        if (count($value) == 0) {
-            unset($page['#attached']['html_head_link'][$key]);
-        }
+    if (count($value) == 0) {
+      unset($page['#attached']['html_head_link'][$key]);
     }
+  }
 
-    switch($current_path) {
+  switch ($current_path) {
     case '/user/login':
     case '/user/password':
     case '/user/register':
-        $page['#attached']['library'][] = 'negnet/admin';
-        break;
-    }
+      $page['#attached']['library'][] = 'negnet/admin';
+      break;
+  }
 }
 
-function negnet_js_alter(&$javascript, \Drupal\Core\Asset\AttachedAssetsInterface $assets) 
-{
-    foreach($javascript as $key=>&$value) {
-        //add attributes to keep cloudflare from modifying javascript
-        $value['attributes']['data-cfasync'] = "false";
-    }
+/**
+ * Implements hook_js_alter().
+ */
+function negnet_js_alter(&$javascript, AttachedAssetsInterface $assets) {
+  foreach ($javascript as $key => &$value) {
+    // Add attributes to keep cloudflare from modifying javascript.
+    $value['attributes']['data-cfasync'] = "false";
+  }
 }
 
 /**
@@ -97,48 +115,53 @@ function negnet_js_alter(&$javascript, \Drupal\Core\Asset\AttachedAssetsInterfac
  *
  * Changes vertical tabs to container.
  */
-function negnet_form_node_form_alter(&$form, FormStateInterface $form_state) 
-{
-    $form['#theme'] = ['node_edit_form'];
-    $form['#attached']['library'][] = 'negnet/node-form';
+function negnet_form_node_form_alter(&$form, FormStateInterface $form_state) {
+  $form['#theme'] = ['node_edit_form'];
+  $form['#attached']['library'][] = 'negnet/node-form';
 
-    $form['advanced']['#type'] = 'container';
-    $form['meta']['#type'] = 'container';
-    $form['meta']['#access'] = true;
-    $form['meta']['changed']['#wrapper_attributes']['class'][] = 'container-inline';
-    $form['meta']['author']['#wrapper_attributes']['class'][] = 'container-inline';
+  $form['advanced']['#type'] = 'container';
+  $form['meta']['#type'] = 'container';
+  $form['meta']['#access'] = TRUE;
+  $form['meta']['changed']['#wrapper_attributes']['class'][] = 'container-inline';
+  $form['meta']['author']['#wrapper_attributes']['class'][] = 'container-inline';
 
-    $form['revision_information']['#type'] = 'container';
-    $form['revision_information']['#group'] = 'meta';
+  $form['revision_information']['#type'] = 'container';
+  $form['revision_information']['#group'] = 'meta';
 }
 
-function negnet_preprocess_menu(&$variables, $hook) 
-{
-    if ($hook == 'menu') {
-        $current_path = \Drupal::request()->getRequestUri();
-        $items = $variables['items'];
+/**
+ * Implements hook_preprocess_menu().
+ */
+function negnet_preprocess_menu(&$variables, $hook) {
+  if ($hook == 'menu') {
+    $current_path = \Drupal::request()->getRequestUri();
+    $items = $variables['items'];
 
-        foreach ($items as $key => $item) {
-            // Set active to dom element if path of menu item matches current path
-            if ($item['url']->toString() == $current_path) {
-                // Add active link.
-                $variables['items'][$key]['attributes']->addClass('active');
-            } else {
-                // Set active to dom element if path of menu item matches first part of current path
-                $url_fragments = explode('/', $current_path);
-                if (count($url_fragments) > 1 AND '/' . $url_fragments[1] == $item['url']->toString()) {
-                    $variables['items'][$key]['attributes']->addClass('active');
-                }
-            }
+    foreach ($items as $key => $item) {
+      // Set active to dom element if path of menu item matches current path.
+      if ($item['url']->toString() == $current_path) {
+        // Add active link.
+        $variables['items'][$key]['attributes']->addClass('active');
+      }
+      else {
+        // Set active to dom element if
+        // path of menu item matches first part of current path.
+        $url_fragments = explode('/', $current_path);
+        if (count($url_fragments) > 1 and '/' . $url_fragments[1] == $item['url']->toString()) {
+          $variables['items'][$key]['attributes']->addClass('active');
         }
+      }
     }
+  }
 }
 
-function negnet_preprocess_menu_local_tasks(&$variables) 
-{
-    foreach ($variables['primary'] as $key => $link) {
-        if ($link['#active'] == true) {
-            unset($variables['primary'][$key]);
-        }
+/**
+ * Implements hook_preprocess_menu_local_tasks().
+ */
+function negnet_preprocess_menu_local_tasks(&$variables) {
+  foreach ($variables['primary'] as $key => $link) {
+    if ($link['#active'] == TRUE) {
+      unset($variables['primary'][$key]);
     }
+  }
 }

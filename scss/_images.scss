@@ -1,34 +1,3 @@
 img, .rs_image, .responsive-image {
   max-width: 100%;
-  @extend %neg_imagesizes;
-}
-
-div {
-  &.half {
-    img {
-      width: 50%;
-    }
-  }
-  &.twentyfive {
-    img {
-      width: 25%;
-    }
-  }
-  &.seventyfive {
-    img {
-      width: 75%;
-    }
-  }
-}
-
-%neg_imagesizes {
-  &.half {
-    width: 50%;
-  }
-  &.twentyfive {
-    width: 25%;
-  }
-  &.seventyfive {
-    width: 75%;
-  }
 }

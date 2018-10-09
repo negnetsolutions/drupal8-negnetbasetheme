@@ -14,7 +14,7 @@ var config = {
 };
 
 // Compile SCSS files to CSS
-gulp.task("scss", function () {
+gulp.task("scss", function (done) {
   var stream = gulp.src(config.sassPattern)
     .pipe(sass({
       outputStyle : config.dev ? "expanded" : "compressed"
@@ -26,11 +26,12 @@ gulp.task("scss", function () {
     .pipe(gulp.dest(config.cssPath))
   ;
 
+  return stream;
 });
 
 // Watch asset folder for changes
-gulp.task("watch", ["scss"], function () {
-    gulp.watch("scss/**/*", ["scss"]);
-});
+gulp.task("watch", gulp.series("scss", function () {
+    gulp.watch("scss/**/*").on('change', gulp.series("scss"));
+}));
 
-gulp.task("default", ["watch"]);
+gulp.task("default", gulp.series("watch", function (done) { done(); }));

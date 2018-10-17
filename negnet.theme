@@ -45,6 +45,8 @@ function negnet_preprocess_page(&$variables) {
 function negnet_preprocess_node(&$variables) {
   $node = $variables['node'];
 
+  $variables['attributes']['class'][] = 'node-' . $node->id();
+
   if (!$node->isPublished()) {
     $variables['attributes']['class'][] = 'unpublished';
     $variables['unpublished'] = TRUE;

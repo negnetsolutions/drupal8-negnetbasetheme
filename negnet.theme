@@ -37,6 +37,9 @@ function negnet_preprocess_page(&$variables) {
     $variables['#attached']['library'][] = 'negnet/admin';
   }
 
+  // Add app class to app wrapper here rather than hard code it
+  // in the template file.
+  $variables['attributes']['class'][] = 'app';
 }
 
 /**

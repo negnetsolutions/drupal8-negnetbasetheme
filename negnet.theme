@@ -158,6 +158,7 @@ function negnet_preprocess_menu(&$variables, $hook) {
       }
     }
   }
+  $variables['#cache'] = ['contexts' => ['url.path']];
 }
 
 /**

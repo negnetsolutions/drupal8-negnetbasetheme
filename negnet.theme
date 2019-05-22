@@ -135,27 +135,39 @@ function negnet_form_node_form_alter(&$form, FormStateInterface $form_state) {
 }
 
 /**
+ * Processes a menu item.
+ */
+function _negnet_process_menu_item(&$item) {
+
+  if ($item['in_active_trail']) {
+    $item['attributes']->addClass('active-trail');
+  }
+
+  if (isset($item['below']) && count($item['below']) > 0) {
+    foreach ($item['below'] as $key => &$below) {
+      _negnet_process_menu_item($below);
+    }
+    return;
+  }
+
+  $current_path = \Drupal::request()->getRequestUri();
+
+  // Set active to dom element if path of menu item matches current path.
+  if ($item['url']->toString() === $current_path) {
+    // Add active link.
+    $item['attributes']->addClass('active');
+  }
+}
+
+/**
  * Implements hook_preprocess_menu().
  */
 function negnet_preprocess_menu(&$variables, $hook) {
   if ($hook == 'menu') {
-    $current_path = \Drupal::request()->getRequestUri();
-    $items = $variables['items'];
+    $items = &$variables['items'];
 
-    foreach ($items as $key => $item) {
-      // Set active to dom element if path of menu item matches current path.
-      if ($item['url']->toString() == $current_path) {
-        // Add active link.
-        $variables['items'][$key]['attributes']->addClass('active');
-      }
-      else {
-        // Set active to dom element if
-        // path of menu item matches first part of current path.
-        $url_fragments = explode('/', $current_path);
-        if (count($url_fragments) > 1 and '/' . $url_fragments[1] == $item['url']->toString()) {
-          $variables['items'][$key]['attributes']->addClass('active');
-        }
-      }
+    foreach ($items as $key => &$item) {
+      _negnet_process_menu_item($item);
     }
   }
   $variables['#cache'] = ['contexts' => ['url.path']];

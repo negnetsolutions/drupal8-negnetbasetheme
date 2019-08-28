@@ -19,9 +19,7 @@ gulp.task("scss", function (done) {
     .pipe(sass({
       outputStyle : config.dev ? "expanded" : "compressed"
     }))
-    .pipe(autoprefixer({
-      browsers : ["last 20 versions"]
-    }))
+    .pipe(autoprefixer())
     .pipe(config.dev ? util.noop() : cleanCSS({compatibility: '*'}))
     .pipe(gulp.dest(config.cssPath))
   ;

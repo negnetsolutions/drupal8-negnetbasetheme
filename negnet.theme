@@ -144,6 +144,7 @@ function _negnet_process_menu_item(&$item) {
   }
 
   if (isset($item['below']) && count($item['below']) > 0) {
+    $item['attributes']->addClass('has-children');
     foreach ($item['below'] as $key => &$below) {
       _negnet_process_menu_item($below);
     }

@@ -30,6 +30,27 @@ function negnet_preprocess_html(&$variables) {
 }
 
 /**
+ * Gets metatags for an entity.
+ */
+function negnet_getMetatags($entity) {
+  $metatag_manager = \Drupal::service('metatag.manager');
+  $metatags = metatag_get_default_tags($entity);
+
+  foreach ($metatag_manager->tagsFromEntity($entity) as $tag => $data) {
+    $metatags[$tag] = $data;
+  }
+
+  $dataTags = [];
+  $tags = $metatag_manager->generateRawElements($metatags, $entity);
+  foreach ($tags as $data) {
+    if (strlen($data['#attributes']['name']) > 0) {
+      $dataTags[$data['#attributes']['name']] = $data['#attributes']['content'];
+    }
+  }
+  return $dataTags;
+}
+
+/**
  * Implements hook_preprocess_page().
  */
 function negnet_preprocess_page(&$variables) {

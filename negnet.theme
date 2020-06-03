@@ -43,7 +43,7 @@ function negnet_getMetatags($entity) {
   $dataTags = [];
   $tags = $metatag_manager->generateRawElements($metatags, $entity);
   foreach ($tags as $data) {
-    if (strlen($data['#attributes']['name']) > 0) {
+    if (isset($data['#attributes']['name']) && isset($data['#attributes']['content']) && strlen($data['#attributes']['name']) > 0) {
       $dataTags[$data['#attributes']['name']] = $data['#attributes']['content'];
     }
   }

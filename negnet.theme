@@ -107,7 +107,8 @@ function negnet_page_attachments_alter(array &$page) {
   ];
   foreach ($page['#attached']['html_head_link'] as $key => &$value) {
     foreach ($value as $kk => $v) {
-      if (in_array($v['rel'], $unset_meta)) {
+
+      if ($v['rel'] && in_array($v['rel'], $unset_meta)) {
         unset($page['#attached']['html_head_link'][$key][$kk]);
       }
     }

@@ -24,7 +24,8 @@ function negnet_preprocess_html(&$variables) {
   }
 
   $node = \Drupal::routeMatch()->getParameter('node');
-  if ($node) {
+
+  if ($node && is_object($node)) {
     $variables['attributes']['class'][] = 'node-' . $node->id();
   }
 }

@@ -2,6 +2,7 @@ name: Negnet Solutions Base Theme
 type: theme
 description: 'A base theme for Negnet Solution Themes'
 core: 8.x
+core_version_requirement: ^8 || ^9
 base theme: false
 libraries:
  - negnet/main

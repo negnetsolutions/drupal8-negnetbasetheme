@@ -10,10 +10,10 @@
   "license": "ISC",
   "devDependencies": {
     "gulp": "*",
-    "gulp-autoprefixer": "*",
-    "gulp-clean-css": "*",
-    "gulp-sass": "*",
-    "gulp-shell": "*",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-sass": "^4.1.0",
+    "gulp-shell": "^0.8.0",
     "gulp-util": "*"
   },
   "browserslist": [

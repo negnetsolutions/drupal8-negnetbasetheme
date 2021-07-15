@@ -184,6 +184,16 @@ function _negnet_process_menu_item(&$item) {
 }
 
 /**
+ * Implements hook_preprocess_menu_local_action().
+ */
+function negnet_preprocess_menu_local_action(&$variables) {
+  $current_path = \Drupal::request()->getRequestUri();
+  if ($current_path == $variables['link']['#url']->toString()) {
+    $variables['link']['#options']['attributes']['class'][] = 'active';
+  }
+}
+
+/**
  * Implements hook_preprocess_menu().
  */
 function negnet_preprocess_menu(&$variables, $hook) {

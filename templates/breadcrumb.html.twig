@@ -17,7 +17,7 @@
         {% if item.url %}
           <a itemprop="item" href="{{ item.url }}"><span itemprop="name">{{ item.text }}</span></a>
         {% else %}
-          <span itemprop="name">{{ item.text }}</span>
+          <span itemprop="item"><span itemprop="name">{{ item.text }}</span></span>
         {% endif %}
       </li>
     {% endfor %}

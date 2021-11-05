@@ -129,16 +129,21 @@ function negnet_page_attachments_alter(array &$page) {
 }
 
 /**
+ * Implements hook_library_info_alter().
+ */
+function negnet_library_info_alter(&$libraries, $extension) {
+  if ($extension == 'core' && isset($libraries['picturefill'])) {
+    $libraries['picturefill']['js']['assets/vendor/picturefill/picturefill.min.js']['attributes']['nomodule'] = 'nomodule';
+  }
+}
+
+/**
  * Implements hook_js_alter().
  */
 function negnet_js_alter(&$javascript, AttachedAssetsInterface $assets) {
   foreach ($javascript as $key => &$value) {
     // Add attributes to keep cloudflare from modifying javascript.
     $value['attributes']['data-cfasync'] = "false";
-
-    if ($key === 'core/assets/vendor/picturefill/picturefill.min.js') {
-      $value['attributes']['nomodule'] = 'nomodule';
-    }
   }
 }
 

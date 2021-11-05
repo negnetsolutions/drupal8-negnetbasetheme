@@ -135,6 +135,10 @@ function negnet_js_alter(&$javascript, AttachedAssetsInterface $assets) {
   foreach ($javascript as $key => &$value) {
     // Add attributes to keep cloudflare from modifying javascript.
     $value['attributes']['data-cfasync'] = "false";
+
+    if ($key === 'core/assets/vendor/picturefill/picturefill.min.js') {
+      $value['attributes']['nomodule'] = 'nomodule';
+    }
   }
 }
 

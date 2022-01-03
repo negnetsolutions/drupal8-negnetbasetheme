@@ -105,6 +105,7 @@ function negnet_page_attachments_alter(array &$page) {
   $unset_meta = [
   // Favicon.
     'shortcut icon',
+    'icon',
   ];
   foreach ($page['#attached']['html_head_link'] as $key => &$value) {
     foreach ($value as $kk => $v) {
